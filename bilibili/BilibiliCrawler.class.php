@@ -159,7 +159,7 @@ class BilibiliCrawler
 		}
 		return $aGif;
 	}
-	public function downloadNavGif()
+	public function downloadNavGif() // 实际下载
 	{				
 		$aGif = $this->getNavGifList();
 		$aDownloadFail = array();
