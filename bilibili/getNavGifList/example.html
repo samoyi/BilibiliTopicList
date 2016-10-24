@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+<h1>异步分次查询所有topic。每次查询十个序号。</h1>
+<p id="status">查询中……</p>
+<ol id="topicList">
+</ol>
+</body>
+
+<script>
+
+let nLatestTopicIndex = 1583; // 输入最新一期话题的url中的数字序号，然后运行该页
+
+
+
+
+let oTopicList = document.getElementById("topicList"),
+	oStatus = document.getElementById("status"),
+	xhr = new XMLHttpRequest();
+xhr.addEventListener("readystatechange", function()
+{	
+	if( 4 == xhr.readyState )
+	{	
+		if( (xhr.status >= 200 && xhr.status < 300) || 304 === xhr.status )
+		{
+			oTopicList.insertAdjacentHTML("beforeend", xhr.responseText);
+			if(nLatestTopicIndex>=10)
+			{
+				nLatestTopicIndex -= 11;
+				getList();
+			}
+			else
+			{
+				oStatus.textContent = "查询结束";
+			}
+		}
+		else
+		{
+			oStatus.textContent = "网络异常。请重试。";
+		}
+	}
+});
+
+getList();
+function getList()
+{
+	let arr = foo(nLatestTopicIndex);
+	nIndexFrom = arr[0];
+	nIndexTo = arr[1];
+	xhr.open("get", "example.php?from=" + nIndexFrom + "&to=" + nIndexTo, true);
+	xhr.send(null);	
+}
+
+function foo()
+{
+	if( nLatestTopicIndex>=10 )
+	{
+		return [nLatestTopicIndex, nLatestTopicIndex-10];
+	}
+	else
+	{
+		return [nLatestTopicIndex, 1];
+	}
+
+}
+
+
+</script>
+</html>
